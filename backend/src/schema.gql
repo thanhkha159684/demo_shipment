@@ -1,0 +1,77 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  accessToken: String!
+  user: User!
+}
+
+input CreateShipmentInput {
+  receiverAddress: String!
+  receiverName: String!
+  senderAddress: String!
+  senderName: String!
+  status: String
+  trackingNumber: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input LoginInput {
+  password: String!
+  username: String!
+}
+
+type Mutation {
+  createShipment(createShipmentInput: CreateShipmentInput!): Shipment!
+  deleteShipment(id: String!): Boolean!
+  login(loginInput: LoginInput!): AuthResponse!
+  register(registerInput: RegisterInput!): AuthResponse!
+  updateShipment(id: String!, updateShipmentInput: UpdateShipmentInput!): Shipment!
+}
+
+type Query {
+  me: User!
+  shipment(id: String!): Shipment
+  shipmentByTracking(trackingNumber: String!): Shipment
+  shipments: [Shipment!]!
+}
+
+input RegisterInput {
+  email: String!
+  password: String!
+  username: String!
+}
+
+type Shipment {
+  createdAt: DateTime!
+  id: ID!
+  receiverAddress: String!
+  receiverName: String!
+  senderAddress: String!
+  senderName: String!
+  status: String!
+  trackingNumber: String!
+  updatedAt: DateTime!
+}
+
+input UpdateShipmentInput {
+  receiverAddress: String
+  receiverName: String
+  senderAddress: String
+  senderName: String
+  status: String
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  id: ID!
+  isActive: Boolean!
+  updatedAt: DateTime!
+  username: String!
+}

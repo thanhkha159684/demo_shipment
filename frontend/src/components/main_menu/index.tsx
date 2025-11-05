@@ -70,10 +70,8 @@ export default function MainMenu() {
   };
 
   const handleToggle = (key: string) => {
-    setOpenKeys(prev => 
-      prev.includes(key) 
-        ? prev.filter(k => k !== key)
-        : [...prev, key]
+    setOpenKeys(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
     );
   };
 
@@ -86,7 +84,9 @@ export default function MainMenu() {
       <Box key={item.key}>
         <ListItemButton
           selected={isSelected && !hasChildren}
-          onClick={() => hasChildren ? handleToggle(item.key) : handleClick(item.key)}
+          onClick={() =>
+            hasChildren ? handleToggle(item.key) : handleClick(item.key)
+          }
           sx={{
             pl: 2 + level * 2,
             color: 'white',
@@ -107,9 +107,12 @@ export default function MainMenu() {
             </ListItemIcon>
           )}
           <ListItemText primary={item.label} />
-          {hasChildren && (
-            isOpen ? <ExpandLess sx={{ color: 'white' }} /> : <ExpandMore sx={{ color: 'white' }} />
-          )}
+          {hasChildren &&
+            (isOpen ? (
+              <ExpandLess sx={{ color: 'white' }} />
+            ) : (
+              <ExpandMore sx={{ color: 'white' }} />
+            ))}
         </ListItemButton>
         {hasChildren && (
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
@@ -125,7 +128,7 @@ export default function MainMenu() {
   return (
     <List
       component="nav"
-      sx={{ 
+      sx={{
         width: '100%',
         color: 'white',
         '& .MuiListItemIcon-root': {

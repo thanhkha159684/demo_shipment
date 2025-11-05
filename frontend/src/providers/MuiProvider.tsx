@@ -16,7 +16,11 @@ const theme = createTheme({
   },
 });
 
-export default function MuiProvider({ children }: { children: React.ReactNode }) {
+export default function MuiProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

@@ -1,14 +1,26 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ShipmentModule } from './modules/shipment.module';
+import { ShipmentModule } from '@/modules/shipment/shipment.module';
+import { UserModule } from '@/modules/user/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      playground: true,
+      introspection: true,
+      context: ({ req }) => ({ req }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -25,9 +37,10 @@ import { ShipmentModule } from './modules/shipment.module';
       }),
       inject: [ConfigService],
     }),
+    UserModule,
     ShipmentModule,
   ],
-  controllers: [AppController], 
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
