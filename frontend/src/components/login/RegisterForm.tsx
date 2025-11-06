@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import apolloClient from '../../lib/apollo-client';
-import { AuthService } from '../../services/auth.service';
-import { RegisterInput } from '../../types/auth';
+import { UserService } from '../../services/user.service';
+import { RegisterInput } from '../../types/user';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   maxWidth: 400,
@@ -87,7 +87,7 @@ const RegisterForm: React.FC<{ onSuccess?: (token: string) => void }> = ({
         password: formData.password,
       };
 
-      const result = await AuthService.register(apolloClient, registerInput);
+      const result = await UserService.register(apolloClient, registerInput);
 
       if (onSuccess) {
         onSuccess(result.accessToken);

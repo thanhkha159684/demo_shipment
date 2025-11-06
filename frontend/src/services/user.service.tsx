@@ -9,7 +9,7 @@ import {
   User,
 } from '../types/user';
 
-export class AuthService {
+export class UserService {
   private static TOKEN_KEY = 'accessToken';
 
   static setToken(token: string): void {

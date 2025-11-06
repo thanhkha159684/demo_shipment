@@ -34,3 +34,7 @@ export interface RegisterMutationResponse {
 export interface MeQueryResponse {
   me: User;
 }
+
+export interface UsersQueryResponse {
+  users: User[];
+}

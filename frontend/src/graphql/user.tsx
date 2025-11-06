@@ -44,3 +44,16 @@ export const ME_QUERY = gql`
     }
   }
 `;
+
+export const USERS_QUERY = gql`
+  query Users {
+    users {
+      id
+      username
+      email
+      isActive
+      createdAt
+      updatedAt
+    }
+  }
+`;

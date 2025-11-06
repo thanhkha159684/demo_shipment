@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { UserResolver } from './user.resolver';
+import { UserRoleService } from './user-role.service';
 import { JwtStrategy } from '@/strategies/jwt.strategy';
 
 @Module({
@@ -23,7 +24,7 @@ import { JwtStrategy } from '@/strategies/jwt.strategy';
       inject: [ConfigService],
     }),
   ],
-  providers: [UserService, UserResolver, JwtStrategy],
-  exports: [UserService],
+  providers: [UserService, UserResolver, UserRoleService, JwtStrategy],
+  exports: [UserService, UserRoleService],
 })
 export class UserModule {}

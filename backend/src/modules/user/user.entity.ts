@@ -5,7 +5,18 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
+
+export enum UserRole {
+  ADMIN = 'admin',
+  CUSTOMER = 'customer',
+  DRIVER = 'driver',
+}
+
+registerEnumType(UserRole, {
+  name: 'UserRole',
+  description: 'The supported user roles',
+});
 
 @ObjectType()
 @Entity('users')
@@ -28,6 +39,14 @@ export class User {
   @Field()
   @Column({ default: true })
   isActive: boolean;
+
+  @Field(() => UserRole)
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.CUSTOMER,
+  })
+  role: UserRole;
 
   @Field()
   @CreateDateColumn()

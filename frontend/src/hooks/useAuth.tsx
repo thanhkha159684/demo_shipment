@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import apolloClient from '../lib/apollo-client';
-import { AuthService } from '../services/auth.service';
-import { User } from '../types/auth';
+import { UserService } from '../services/user.service';
+import { User } from '../types/user';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -15,21 +15,21 @@ export const useAuth = () => {
   const checkAuthStatus = async () => {
     setLoading(true);
 
-    if (AuthService.isAuthenticated()) {
+    if (UserService.isAuthenticated()) {
       try {
-        const currentUser = await AuthService.getCurrentUser(apolloClient);
+        const currentUser = await UserService.getCurrentUser(apolloClient);
         if (currentUser) {
           setUser(currentUser);
           setIsAuthenticated(true);
         } else {
           // Token is invalid, clear it
-          AuthService.logout();
+          UserService.logout();
           setUser(null);
           setIsAuthenticated(false);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
-        AuthService.logout();
+        UserService.logout();
         setUser(null);
         setIsAuthenticated(false);
       }
@@ -44,7 +44,7 @@ export const useAuth = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const login = async (_token: string) => {
     try {
-      const currentUser = await AuthService.getCurrentUser(apolloClient);
+      const currentUser = await UserService.getCurrentUser(apolloClient);
       if (currentUser) {
         setUser(currentUser);
         setIsAuthenticated(true);
@@ -52,13 +52,13 @@ export const useAuth = () => {
       }
     } catch (error) {
       console.error('Login failed:', error);
-      AuthService.logout();
+      UserService.logout();
     }
     return false;
   };
 
   const logout = () => {
-    AuthService.logout();
+    UserService.logout();
     setUser(null);
     setIsAuthenticated(false);
   };

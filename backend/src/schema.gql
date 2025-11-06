@@ -32,6 +32,7 @@ type Mutation {
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
   updateShipment(id: String!, updateShipmentInput: UpdateShipmentInput!): Shipment!
+  updateUserRole(role: UserRole!, userId: String!): User!
 }
 
 type Query {
@@ -39,11 +40,14 @@ type Query {
   shipment(id: String!): Shipment
   shipmentByTracking(trackingNumber: String!): Shipment
   shipments: [Shipment!]!
+  users: [User!]!
+  usersByRole(role: UserRole!): [User!]!
 }
 
 input RegisterInput {
   email: String!
   password: String!
+  role: UserRole
   username: String!
 }
 
@@ -72,6 +76,14 @@ type User {
   email: String!
   id: ID!
   isActive: Boolean!
+  role: UserRole!
   updatedAt: DateTime!
   username: String!
+}
+
+"""The supported user roles"""
+enum UserRole {
+  ADMIN
+  CUSTOMER
+  DRIVER
 }

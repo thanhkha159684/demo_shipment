@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from './user.entity';
+import { User, UserRole } from './user.entity';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
 import { AuthResponse } from './dto/auth-response.type';
@@ -45,7 +45,7 @@ export class UserService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { username: user.username, sub: user.id };
+    const payload = { username: user.username, sub: user.id, role: user.role };
     const accessToken = this.jwtService.sign(payload);
 
     return {
@@ -55,7 +55,7 @@ export class UserService {
   }
 
   async register(registerInput: RegisterInput): Promise<AuthResponse> {
-    const { username, email, password } = registerInput;
+    const { username, email, password, role } = registerInput;
 
     // Check if user already exists
     const existingUser = await this.userRepository.findOne({
@@ -74,17 +74,26 @@ export class UserService {
       username,
       email,
       password: hashedPassword,
+      role: role || UserRole.CUSTOMER, // Default to CUSTOMER if no role specified
     });
 
     const savedUser = await this.userRepository.save(user);
 
     // Generate JWT token
-    const payload = { username: savedUser.username, sub: savedUser.id };
+    const payload = { username: savedUser.username, sub: savedUser.id, role: savedUser.role };
     const accessToken = this.jwtService.sign(payload);
 
     return {
       accessToken,
       user: savedUser,
     };
+  }
+
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 }

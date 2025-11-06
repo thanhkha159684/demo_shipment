@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import {
   List,
   ListItemButton,
@@ -10,11 +11,10 @@ import {
   Box,
 } from '@mui/material';
 import {
-  PieChart,
-  Computer,
-  Inventory,
-  Mail,
-  Apps,
+  People,
+  ShoppingCart,
+  PersonAdd,
+  LocalShipping,
   ExpandLess,
   ExpandMore,
 } from '@mui/icons-material';
@@ -23,50 +23,46 @@ interface MenuItem {
   key: string;
   icon: React.ReactNode;
   label: string;
+  href?: string;
   children?: MenuItem[];
 }
 
 const menuItems: MenuItem[] = [
-  { key: '1', icon: <PieChart />, label: 'Option 1' },
-  { key: '2', icon: <Computer />, label: 'Option 2' },
-  { key: '3', icon: <Inventory />, label: 'Option 3' },
   {
-    key: 'sub1',
-    label: 'Navigation One',
-    icon: <Mail />,
-    children: [
-      { key: '5', icon: null, label: 'Option 5' },
-      { key: '6', icon: null, label: 'Option 6' },
-      { key: '7', icon: null, label: 'Option 7' },
-      { key: '8', icon: null, label: 'Option 8' },
-    ],
+    key: 'user-management',
+    icon: <People />,
+    label: 'User Management',
+    href: '/users',
   },
   {
-    key: 'sub2',
-    label: 'Navigation Two',
-    icon: <Apps />,
-    children: [
-      { key: '9', icon: null, label: 'Option 9' },
-      { key: '10', icon: null, label: 'Option 10' },
-      {
-        key: 'sub3',
-        label: 'Submenu',
-        icon: null,
-        children: [
-          { key: '11', icon: null, label: 'Option 11' },
-          { key: '12', icon: null, label: 'Option 12' },
-        ],
-      },
-    ],
+    key: 'order-management',
+    icon: <ShoppingCart />,
+    label: 'Order Management',
+    href: '/orders',
+  },
+  {
+    key: 'customer-management',
+    icon: <PersonAdd />,
+    label: 'Customer Management',
+    href: '/customers',
+  },
+  {
+    key: 'shipment-management',
+    icon: <LocalShipping />,
+    label: 'Shipment Management',
+    href: '/shipments',
   },
 ];
 
 export default function MainMenu() {
-  const [selectedKey, setSelectedKey] = useState('1');
+  const router = useRouter();
+  const pathname = usePathname();
   const [openKeys, setOpenKeys] = useState<string[]>([]);
 
-  const handleClick = (key: string) => {
-    setSelectedKey(key);
+  const handleClick = (item: MenuItem) => {
+    if (item.href) {
+      router.push(item.href);
+    }
   };
 
   const handleToggle = (key: string) => {
@@ -75,17 +71,21 @@ export default function MainMenu() {
     );
   };
 
+  const isSelected = (item: MenuItem) => {
+    return item.href === pathname;
+  };
+
   const renderMenuItem = (item: MenuItem, level = 0): React.ReactNode => {
     const hasChildren = item.children && item.children.length > 0;
     const isOpen = openKeys.includes(item.key);
-    const isSelected = selectedKey === item.key;
+    const selected = isSelected(item);
 
     return (
       <Box key={item.key}>
         <ListItemButton
-          selected={isSelected && !hasChildren}
+          selected={selected && !hasChildren}
           onClick={() =>
-            hasChildren ? handleToggle(item.key) : handleClick(item.key)
+            hasChildren ? handleToggle(item.key) : handleClick(item)
           }
           sx={{
             pl: 2 + level * 2,
